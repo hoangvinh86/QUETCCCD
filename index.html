@@ -3,65 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quét CCCD + Lưu thông tin</title>
+    <title>PHÒNG KHÁM ĐA KHOA ASIA PHÚ MỸ</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         body {
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f5f7fa 100%);
             color: #1a1a1a;
-            padding: 16px;
+            padding: 20px 16px;
             max-width: 1000px;
             margin: 0 auto;
+            min-height: 100vh;
         }
-        h1 {
+        .header {
             text-align: center;
-            font-size: 1.5rem;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(13,71,161,0.1);
+        }
+        .header h1 {
+            font-size: 1.6rem;
             color: #0d47a1;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
         }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 20px;
+        .header p {
+            color: #546e7a;
             font-size: 0.95rem;
         }
         .card {
             background: white;
-            border-radius: 12px;
-            padding: 18px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 18px;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            border: 1px solid #e3f2fd;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0d47a1;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e3f2fd;
         }
         label {
             display: block;
             font-weight: 600;
             margin-bottom: 6px;
-            color: #333;
+            color: #37474f;
+            font-size: 0.95rem;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
+            padding: 12px 14px;
+            border: 2px solid #cfd8dc;
+            border-radius: 10px;
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
+            background: #fafafa;
         }
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             border-color: #0d47a1;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(13,71,161,0.12);
         }
         input.error {
-            border-color: #d32f2f;
+            border-color: #e53935;
+            background: #fff5f5;
         }
         .error-text {
-            color: #d32f2f;
+            color: #e53935;
             font-size: 0.85rem;
-            margin-top: 4px;
+            margin-top: 5px;
             display: none;
         }
         .error-text.show {
@@ -70,51 +91,58 @@
         .btn-group {
             display: flex;
             gap: 10px;
-            margin-top: 14px;
+            margin-top: 16px;
             flex-wrap: wrap;
         }
         button {
-            padding: 12px 18px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .btn-primary { background: #0d47a1; color: white; }
         .btn-success { background: #2e7d32; color: white; }
         .btn-danger { background: #c62828; color: white; }
-        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-secondary { background: #eceff1; color: #37474f; }
         .btn-warning { background: #f9a825; color: #333; }
+        .btn-info { background: #0277bd; color: white; }
         .raw-data {
-            background: #f8f9fa;
+            background: #f5f7fa;
             border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 12px 14px;
             font-size: 0.9rem;
             word-break: break-all;
             margin-bottom: 14px;
+            color: #455a64;
         }
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
         }
         .info-table td {
-            padding: 9px 6px;
+            padding: 10px 8px;
             border-bottom: 1px solid #eee;
             vertical-align: top;
         }
         .info-table td:first-child {
             font-weight: 600;
-            width: 160px;
-            color: #555;
+            width: 150px;
+            color: #546e7a;
         }
         .status {
             text-align: center;
-            margin: 10px 0;
-            font-weight: 500;
+            margin: 12px 0;
+            font-weight: 600;
             color: #0d47a1;
+            min-height: 24px;
         }
         table.data-table {
             width: 100%;
@@ -122,8 +150,8 @@
             font-size: 0.87rem;
         }
         table.data-table th, table.data-table td {
-            border: 1px solid #ddd;
-            padding: 9px 7px;
+            border: 1px solid #e0e0e0;
+            padding: 10px 8px;
             text-align: left;
         }
         table.data-table th {
@@ -134,83 +162,162 @@
             white-space: nowrap;
         }
         table.data-table tr:nth-child(even) {
-            background: #f9f9f9;
+            background: #f8fafc;
         }
         .table-wrapper {
             max-height: 420px;
             overflow: auto;
-            border-radius: 8px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
         }
         .action-btn {
-            padding: 5px 10px;
+            padding: 6px 12px;
             font-size: 0.85rem;
-            margin-right: 4px;
         }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         .row-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
         }
-        @media (max-width: 600px) {
-            .row-2 { grid-template-columns: 1fr; }
+        .row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 700px) {
+            .row-2, .row-3 { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.3rem; }
         }
         .export-box {
             display: flex;
             gap: 12px;
             align-items: end;
             flex-wrap: wrap;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .export-box > div {
             flex: 1;
             min-width: 160px;
         }
+        .count-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 1px solid #90caf9;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0d47a1;
+            text-align: center;
+        }
+        .manual-form {
+            border: 2px dashed #64b5f6;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 16px;
+            background: #f8fbff;
+        }
+        .manual-form h3 {
+            margin-bottom: 16px;
+            color: #0d47a1;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
-    <h1>Quét CCCD + Lưu thông tin</h1>
-    <p class="subtitle">Quét CCCD → nhập SĐT + Địa chỉ mới + Mã xét nghiệm → Lưu</p>
+    <div class="header">
+        <h1>PHÒNG KHÁM ĐA KHOA ASIA PHÚ MỸ</h1>
+        <p>Hệ thống tiếp nhận & lưu thông tin bệnh nhân</p>
+    </div>
 
     <!-- 1. QUÉT CCCD -->
     <div class="card">
-        <label for="scanInput">1. Quét mã QR CCCD (máy quét):</label>
-        <textarea id="scanInput" rows="3" placeholder="Đưa thẻ CCCD vào máy quét tại đây..." autofocus></textarea>
+        <div class="card-title">1. Quét / Nhập thông tin CCCD</div>
+        <label for="scanInput">Quét mã QR CCCD bằng máy quét:</label>
+        <textarea id="scanInput" rows="2" placeholder="Đưa thẻ CCCD vào máy quét tại đây..." autofocus></textarea>
         <div class="btn-group">
             <button class="btn-primary" onclick="processCCCD()">Xử lý CCCD</button>
-            <button class="btn-secondary" onclick="clearCCCD()">Xóa CCCD</button>
+            <button class="btn-info" onclick="toggleManualForm()">✍️ Nhập tay CCCD</button>
+            <button class="btn-secondary" onclick="clearCCCD()">Xóa</button>
+        </div>
+
+        <!-- FORM NHẬP TAY -->
+        <div class="manual-form hidden" id="manualForm">
+            <h3>Nhập thông tin CCCD bằng tay</h3>
+            <div class="row-2">
+                <div>
+                    <label>Số CCCD (12 số) *</label>
+                    <input type="text" id="manual_soCCCD" maxlength="12" placeholder="012345678901" oninput="validateCCCD(this)">
+                    <div class="error-text" id="cccdError">Số CCCD phải đúng 12 chữ số</div>
+                </div>
+                <div>
+                    <label>Số CMND cũ (không bắt buộc)</label>
+                    <input type="text" id="manual_soCMND" maxlength="12" placeholder="Để trống nếu không có">
+                </div>
+            </div>
+            <div style="margin-top:14px;">
+                <label>Họ và tên *</label>
+                <input type="text" id="manual_hoTen" placeholder="Nguyễn Văn A" oninput="autoCapitalize(this)">
+            </div>
+            <div class="row-3" style="margin-top:14px;">
+                <div>
+                    <label>Ngày sinh (dd/mm/yyyy)</label>
+                    <input type="text" id="manual_ngaySinh" placeholder="20/09/1986">
+                </div>
+                <div>
+                    <label>Giới tính</label>
+                    <select id="manual_gioiTinh">
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Ngày cấp (dd/mm/yyyy)</label>
+                    <input type="text" id="manual_ngayCap" placeholder="20/06/2021">
+                </div>
+            </div>
+            <div style="margin-top:14px;">
+                <label>Địa chỉ trên CCCD</label>
+                <textarea id="manual_diaChi" rows="2" placeholder="Địa chỉ thường trú trên thẻ..."></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn-success" onclick="applyManualCCCD()">Áp dụng thông tin</button>
+                <button class="btn-secondary" onclick="toggleManualForm()">Đóng</button>
+            </div>
         </div>
     </div>
 
     <!-- THÔNG TIN CCCD -->
     <div class="card hidden" id="cccdResult">
-        <div style="font-weight:600; margin-bottom:6px;">Chuỗi gốc:</div>
+        <div class="card-title">Thông tin CCCD hiện tại</div>
         <div class="raw-data" id="rawData"></div>
         <table class="info-table" id="infoTable"></table>
     </div>
 
-    <!-- 2. NHẬP THÔNG TIN BỔ SUNG -->
+    <!-- 2. THÔNG TIN BỔ SUNG -->
     <div class="card">
+        <div class="card-title">2. Thông tin bổ sung</div>
         <div class="row-2">
             <div>
-                <label for="phoneInput">2. Số điện thoại (đúng 10 số):</label>
+                <label for="phoneInput">Số điện thoại (10 số) *</label>
                 <input type="text" id="phoneInput" maxlength="10" placeholder="0912345678" oninput="validatePhone()">
                 <div class="error-text" id="phoneError">Số điện thoại phải đúng 10 chữ số</div>
             </div>
             <div>
-                <label for="testCodeInput">3. Mã code xét nghiệm:</label>
+                <label for="testCodeInput">Mã xét nghiệm *</label>
                 <input type="text" id="testCodeInput" placeholder="Quét hoặc nhập mã xét nghiệm...">
             </div>
         </div>
 
         <div style="margin-top: 14px;">
-            <label for="newAddressInput">4. Địa chỉ mới (nhập tay):</label>
-            <textarea id="newAddressInput" rows="2" placeholder="Nhập địa chỉ mới nhất..."></textarea>
+            <label for="newAddressInput">Địa chỉ mới</label>
+            <textarea id="newAddressInput" rows="2" placeholder="Nhập địa chỉ hiện tại của bệnh nhân..."></textarea>
         </div>
 
         <div class="btn-group">
             <button class="btn-success" onclick="saveData()">💾 Lưu thông tin</button>
-            <button class="btn-secondary" onclick="clearForm()">Làm mới form</button>
+            <button class="btn-secondary" onclick="clearForm()">Làm mới</button>
         </div>
     </div>
 
@@ -218,18 +325,20 @@
 
     <!-- BẢNG DANH SÁCH -->
     <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-            <h3 style="color:#0d47a1;">Danh sách đã lưu</h3>
+        <div class="card-title">Danh sách đã lưu</div>
+
+        <div class="count-box" id="countBox">
+            Tổng lượt hôm nay: <span id="todayCount">0</span> lượt
         </div>
 
-        <!-- CHỌN NGÀY XUẤT + NÚT XUẤT -->
         <div class="export-box">
             <div>
-                <label for="exportDate">Ngày xuất Excel:</label>
-                <input type="date" id="exportDate">
+                <label for="exportDate">Chỉ xuất dữ liệu của ngày:</label>
+                <input type="date" id="exportDate" onchange="updateTodayCount()">
             </div>
-            <div style="display:flex; gap:8px;">
-                <button class="btn-warning" onclick="exportExcel()">📥 Xuất Excel đẹp</button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn-warning" onclick="exportExcel()">📥 Xuất theo ngày</button>
+                <button class="btn-secondary action-btn" onclick="exportAllExcel()">Xuất tất cả</button>
                 <button class="btn-danger action-btn" onclick="clearAllData()">Xóa tất cả</button>
             </div>
         </div>
@@ -257,7 +366,6 @@
     <script>
         let currentCCCD = null;
 
-        // Set ngày mặc định là hôm nay
         document.getElementById("exportDate").valueAsDate = new Date();
 
         // ===== QUÉT CCCD =====
@@ -278,6 +386,10 @@
 
             document.getElementById("rawData").textContent = raw;
             currentCCCD = parseCCCD(raw);
+            // Viết hoa tên
+            if (currentCCCD.hoTen) {
+                currentCCCD.hoTen = toTitleCase(currentCCCD.hoTen);
+            }
             renderCCCDInfo(currentCCCD);
             document.getElementById("cccdResult").classList.remove("hidden");
             showStatus("✅ Đã đọc thông tin CCCD");
@@ -303,16 +415,29 @@
             return `${str.substring(0,2)}/${str.substring(2,4)}/${str.substring(4)}`;
         }
 
+        function toTitleCase(str) {
+            return str.toLowerCase().split(' ').map(word => {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }).join(' ');
+        }
+
+        function autoCapitalize(input) {
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            input.value = toTitleCase(input.value);
+            input.setSelectionRange(start, end);
+        }
+
         function renderCCCDInfo(data) {
             const table = document.getElementById("infoTable");
             table.innerHTML = `
                 <tr><td>Số CCCD</td><td><strong>${data.soCCCD}</strong></td></tr>
-                <tr><td>Số CMND cũ</td><td>${data.soCMNDCu}</td></tr>
+                <tr><td>Số CMND cũ</td><td>${data.soCMNDCu || "<i style='color:#999'>Không có</i>"}</td></tr>
                 <tr><td>Họ và tên</td><td><strong>${data.hoTen}</strong></td></tr>
                 <tr><td>Ngày sinh</td><td>${data.ngaySinh}</td></tr>
                 <tr><td>Giới tính</td><td>${data.gioiTinh}</td></tr>
-                <tr><td>Địa chỉ trên CCCD</td><td>${data.diaChiCu}</td></tr>
-                <tr><td>Ngày cấp</td><td>${data.ngayCap}</td></tr>
+                <tr><td>Địa chỉ trên CCCD</td><td>${data.diaChiCu || ""}</td></tr>
+                <tr><td>Ngày cấp</td><td>${data.ngayCap || ""}</td></tr>
             `;
         }
 
@@ -320,12 +445,65 @@
             scanInput.value = "";
             currentCCCD = null;
             document.getElementById("cccdResult").classList.add("hidden");
+            document.getElementById("manualForm").classList.add("hidden");
             scanInput.focus();
+        }
+
+        // ===== NHẬP TAY =====
+        function toggleManualForm() {
+            document.getElementById("manualForm").classList.toggle("hidden");
+        }
+
+        function validateCCCD(input) {
+            input.value = input.value.replace(/\D/g, "").slice(0, 12);
+            const error = document.getElementById("cccdError");
+            if (input.value.length > 0 && input.value.length !== 12) {
+                error.classList.add("show");
+                input.classList.add("error");
+                return false;
+            }
+            error.classList.remove("show");
+            input.classList.remove("error");
+            return true;
+        }
+
+        function applyManualCCCD() {
+            const soCCCD = document.getElementById("manual_soCCCD").value.trim();
+            const hoTen = document.getElementById("manual_hoTen").value.trim();
+
+            if (!soCCCD || soCCCD.length !== 12) {
+                showStatus("Số CCCD phải đúng 12 chữ số!", true);
+                document.getElementById("manual_soCCCD").focus();
+                return;
+            }
+            if (!hoTen) {
+                showStatus("Vui lòng nhập Họ và tên!", true);
+                document.getElementById("manual_hoTen").focus();
+                return;
+            }
+
+            currentCCCD = {
+                raw: "Nhập tay",
+                soCCCD: soCCCD,
+                soCMNDCu: document.getElementById("manual_soCMND").value.trim(),
+                hoTen: toTitleCase(hoTen),
+                ngaySinh: document.getElementById("manual_ngaySinh").value.trim(),
+                gioiTinh: document.getElementById("manual_gioiTinh").value,
+                diaChiCu: document.getElementById("manual_diaChi").value.trim(),
+                ngayCap: document.getElementById("manual_ngayCap").value.trim()
+            };
+
+            document.getElementById("rawData").textContent = "Nhập tay thủ công";
+            renderCCCDInfo(currentCCCD);
+            document.getElementById("cccdResult").classList.remove("hidden");
+            document.getElementById("manualForm").classList.add("hidden");
+            showStatus("✅ Đã áp dụng thông tin nhập tay");
+            document.getElementById("phoneInput").focus();
         }
 
         // ===== VALIDATE SĐT =====
         function validatePhone() {
-            const phone = document.getElementById("phoneInput").value.replace(/\D/g, "");
+            const phone = document.getElementById("phoneInput").value.replace(/\D/g, "").slice(0, 10);
             document.getElementById("phoneInput").value = phone;
 
             const error = document.getElementById("phoneError");
@@ -347,7 +525,7 @@
         // ===== LƯU DỮ LIỆU =====
         function saveData() {
             if (!currentCCCD) {
-                showStatus("Vui lòng quét CCCD trước!", true);
+                showStatus("Vui lòng quét hoặc nhập tay CCCD trước!", true);
                 return;
             }
 
@@ -367,13 +545,15 @@
                 return;
             }
 
+            const now = new Date();
             const record = {
                 id: Date.now(),
                 ...currentCCCD,
                 soDienThoai: phone,
                 diaChiMoi: newAddress,
                 maXetNghiem: testCode,
-                thoiGianLuu: new Date().toLocaleString("vi-VN")
+                thoiGianLuu: now.toLocaleString("vi-VN"),
+                ngayLuu: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`
             };
 
             let list = JSON.parse(localStorage.getItem("cccd_list") || "[]");
@@ -382,8 +562,8 @@
 
             showStatus("✅ Đã lưu thành công!");
             loadTable();
+            updateTodayCount();
             
-            // Chỉ xóa SĐT + mã XN + địa chỉ mới, giữ CCCD để quét tiếp nếu cần
             document.getElementById("phoneInput").value = "";
             document.getElementById("testCodeInput").value = "";
             document.getElementById("newAddressInput").value = "";
@@ -397,7 +577,8 @@
             tbody.innerHTML = "";
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#888;">Chưa có dữ liệu</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#999; padding:20px;">Chưa có dữ liệu</td></tr>`;
+                updateTodayCount();
                 return;
             }
 
@@ -412,12 +593,29 @@
                     <td>${item.diaChiMoi || ""}</td>
                     <td>${item.maXetNghiem}</td>
                     <td>${item.thoiGianLuu}</td>
-                    <td>
-                        <button class="btn-danger action-btn" onclick="deleteRecord(${item.id})">Xóa</button>
-                    </td>
+                    <td><button class="btn-danger action-btn" onclick="deleteRecord(${item.id})">Xóa</button></td>
                 `;
                 tbody.appendChild(tr);
             });
+            updateTodayCount();
+        }
+
+        function updateTodayCount() {
+            const list = JSON.parse(localStorage.getItem("cccd_list") || "[]");
+            const selectedDate = document.getElementById("exportDate").value;
+
+            let count = 0;
+            if (selectedDate) {
+                count = list.filter(item => item.ngayLuu === selectedDate).length;
+                document.getElementById("countBox").innerHTML = 
+                    `Tổng lượt ngày ${formatDisplayDate(selectedDate)}: <span id="todayCount">${count}</span> lượt`;
+            } else {
+                const today = new Date();
+                const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+                count = list.filter(item => item.ngayLuu === todayStr).length;
+                document.getElementById("countBox").innerHTML = 
+                    `Tổng lượt hôm nay: <span id="todayCount">${count}</span> lượt`;
+            }
         }
 
         function deleteRecord(id) {
@@ -445,7 +643,7 @@
             clearCCCD();
         }
 
-        // ===== XUẤT EXCEL ĐẸP =====
+        // ===== XUẤT EXCEL =====
         function exportExcel() {
             const list = JSON.parse(localStorage.getItem("cccd_list") || "[]");
             if (list.length === 0) {
@@ -454,18 +652,34 @@
             }
 
             const exportDateInput = document.getElementById("exportDate").value;
-            let exportDateStr = "";
-            if (exportDateInput) {
-                const d = new Date(exportDateInput);
-                exportDateStr = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
-            } else {
-                exportDateStr = new Date().toLocaleDateString("vi-VN");
+            if (!exportDateInput) {
+                showStatus("Vui lòng chọn ngày xuất!", true);
+                return;
             }
 
-            // Header đẹp
-            let csv = "STT,Số CCCD,Số CMND cũ,Họ và tên,Ngày sinh,Giới tính,Địa chỉ trên CCCD,Địa chỉ mới,Số điện thoại,Mã xét nghiệm,Ngày cấp CCCD,Thời gian lưu,Ngày xuất file\n";
+            const filtered = list.filter(item => item.ngayLuu === exportDateInput);
+            if (filtered.length === 0) {
+                showStatus(`Không có dữ liệu nào được lưu vào ngày ${formatDisplayDate(exportDateInput)}`, true);
+                return;
+            }
+            downloadExcel(filtered, exportDateInput);
+        }
 
-            list.forEach((item, index) => {
+        function exportAllExcel() {
+            const list = JSON.parse(localStorage.getItem("cccd_list") || "[]");
+            if (list.length === 0) {
+                showStatus("Không có dữ liệu để xuất", true);
+                return;
+            }
+            downloadExcel(list, null);
+        }
+
+        function downloadExcel(dataList, selectedDate) {
+            let exportDateStr = selectedDate ? formatDisplayDate(selectedDate) : new Date().toLocaleDateString("vi-VN");
+
+            let csv = "STT,Số CCCD,Số CMND cũ,Họ và tên,Ngày sinh,Giới tính,Địa chỉ trên CCCD,Địa chỉ mới,Số điện thoại,Mã xét nghiệm,Ngày cấp CCCD,Thời gian lưu\n";
+
+            dataList.forEach((item, index) => {
                 csv += [
                     index + 1,
                     `"${item.soCCCD || ""}"`,
@@ -478,33 +692,36 @@
                     `"${item.soDienThoai || ""}"`,
                     `"${item.maXetNghiem || ""}"`,
                     `"${item.ngayCap || ""}"`,
-                    `"${item.thoiGianLuu || ""}"`,
-                    `"${exportDateStr}"`
+                    `"${item.thoiGianLuu || ""}"`
                 ].join(",") + "\n";
             });
 
-            // Thêm BOM để Excel mở tiếng Việt không lỗi font
             const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-
-            // Tên file có ngày xuất
-            const fileName = `Danh_sach_CCCD_${exportDateStr.replace(/\//g, "-")}.csv`;
+            const fileName = selectedDate 
+                ? `Danh_sach_CCCD_${exportDateStr.replace(/\//g, "-")}.csv`
+                : `Danh_sach_CCCD_Tat_ca_${exportDateStr.replace(/\//g, "-")}.csv`;
             link.download = fileName;
             link.click();
+            showStatus(`✅ Đã xuất ${dataList.length} dòng dữ liệu`);
+        }
 
-            showStatus(`✅ Đã xuất Excel thành công (${fileName})`);
+        function formatDisplayDate(yyyyMmDd) {
+            if (!yyyyMmDd) return "";
+            const [y, m, d] = yyyyMmDd.split("-");
+            return `${d}/${m}/${y}`;
         }
 
         function showStatus(msg, isError = false) {
             const el = document.getElementById("status");
             el.textContent = msg;
-            el.style.color = isError ? "#d32f2f" : "#0d47a1";
+            el.style.color = isError ? "#e53935" : "#0d47a1";
         }
 
-        // Khởi tạo
         window.onload = () => {
             loadTable();
+            updateTodayCount();
             scanInput.focus();
         };
     </script>
