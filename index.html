@@ -316,7 +316,7 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn-success" onclick="saveData()">💾 Lưu thông tin</button>
+            <button class="btn-success" id="btnSave" onclick="saveData()">💾 Lưu thông tin</button>
             <button class="btn-secondary" onclick="clearForm()">Làm mới</button>
         </div>
     </div>
@@ -325,7 +325,7 @@
 
     <!-- BẢNG DANH SÁCH -->
     <div class="card">
-        <div class="card-title">Danh sách đã lưu</div>
+        <div class="card-title">Danh sách đã lưu (trên máy này)</div>
 
         <div class="count-box" id="countBox">
             Tổng lượt hôm nay: <span id="todayCount">0</span> lượt
@@ -364,6 +364,10 @@
     </div>
 
     <script>
+        // ====================== CẤU HÌNH GOOGLE SHEET ======================
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwU0RtnemRpYWfhQXEFm_VJAWMJTl18BHifYerXTmJeMTZJ6f9oepQrQTZfjdzlm3k/exec";
+        // ==================================================================
+
         let currentCCCD = null;
 
         document.getElementById("exportDate").valueAsDate = new Date();
@@ -386,7 +390,6 @@
 
             document.getElementById("rawData").textContent = raw;
             currentCCCD = parseCCCD(raw);
-            // Viết hoa tên
             if (currentCCCD.hoTen) {
                 currentCCCD.hoTen = toTitleCase(currentCCCD.hoTen);
             }
@@ -522,8 +525,8 @@
             return true;
         }
 
-        // ===== LƯU DỮ LIỆU =====
-        function saveData() {
+        // ===== LƯU DỮ LIỆU (GỬI VÀO GOOGLE SHEET) =====
+        async function saveData() {
             if (!currentCCCD) {
                 showStatus("Vui lòng quét hoặc nhập tay CCCD trước!", true);
                 return;
@@ -556,18 +559,45 @@
                 ngayLuu: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`
             };
 
-            let list = JSON.parse(localStorage.getItem("cccd_list") || "[]");
-            list.unshift(record);
-            localStorage.setItem("cccd_list", JSON.stringify(list));
+            // Hiển thị đang lưu
+            const btnSave = document.getElementById("btnSave");
+            btnSave.disabled = true;
+            btnSave.textContent = "Đang lưu...";
+            showStatus("Đang gửi dữ liệu vào Google Sheet...");
 
-            showStatus("✅ Đã lưu thành công!");
-            loadTable();
-            updateTodayCount();
-            
-            document.getElementById("phoneInput").value = "";
-            document.getElementById("testCodeInput").value = "";
-            document.getElementById("newAddressInput").value = "";
-            document.getElementById("phoneInput").focus();
+            try {
+                // Gửi lên Google Sheet
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(record)
+                });
+
+                // Lưu tạm vào localStorage để hiển thị bảng
+                let list = JSON.parse(localStorage.getItem("cccd_list") || "[]");
+                list.unshift(record);
+                localStorage.setItem("cccd_list", JSON.stringify(list));
+
+                showStatus("✅ Đã lưu thành công vào Google Sheet!");
+                loadTable();
+                updateTodayCount();
+
+                // Xóa form
+                document.getElementById("phoneInput").value = "";
+                document.getElementById("testCodeInput").value = "";
+                document.getElementById("newAddressInput").value = "";
+                document.getElementById("phoneInput").focus();
+
+            } catch (error) {
+                console.error(error);
+                showStatus("Lỗi khi lưu vào Google Sheet. Kiểm tra lại kết nối!", true);
+            } finally {
+                btnSave.disabled = false;
+                btnSave.textContent = "💾 Lưu thông tin";
+            }
         }
 
         // ===== LOAD BẢNG =====
@@ -619,19 +649,19 @@
         }
 
         function deleteRecord(id) {
-            if (!confirm("Bạn có chắc muốn xóa dòng này?")) return;
+            if (!confirm("Bạn có chắc muốn xóa dòng này khỏi bảng tạm?")) return;
             let list = JSON.parse(localStorage.getItem("cccd_list") || "[]");
             list = list.filter(item => item.id !== id);
             localStorage.setItem("cccd_list", JSON.stringify(list));
             loadTable();
-            showStatus("Đã xóa thành công");
+            showStatus("Đã xóa khỏi bảng tạm (dữ liệu trên Google Sheet vẫn còn)");
         }
 
         function clearAllData() {
-            if (!confirm("Bạn có chắc muốn xóa TẤT CẢ dữ liệu đã lưu?")) return;
+            if (!confirm("Bạn có chắc muốn xóa TẤT CẢ dữ liệu trên bảng tạm?\n(Dữ liệu trên Google Sheet vẫn giữ nguyên)")) return;
             localStorage.removeItem("cccd_list");
             loadTable();
-            showStatus("Đã xóa tất cả dữ liệu");
+            showStatus("Đã xóa tất cả dữ liệu tạm");
         }
 
         function clearForm() {
