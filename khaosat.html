@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo sát hài lòng - PHÒNG KHÁM ĐA KHOA ASIA PHÚ MỸ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 50%, #fce4ec 100%);
+            min-height: 100vh;
+            padding: 20px 16px;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            padding: 24px 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        .logo {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: #1b5e20;
+            margin-bottom: 6px;
+        }
+        .header p {
+            color: #546e7a;
+            font-size: 0.95rem;
+        }
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0d47a1;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .question {
+            margin-bottom: 22px;
+        }
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.02rem;
+        }
+        .rating {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .rating-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid #e0e0e0;
+            background: white;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .rating-btn:hover {
+            transform: scale(1.12);
+        }
+        .rating-btn.active {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(46,125,50,0.3);
+        }
+        .stars {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+        .star {
+            font-size: 2.2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .star:hover,
+        .star.active {
+            color: #ffc107;
+            transform: scale(1.2);
+        }
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #cfd8dc;
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 90px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        textarea:focus {
+            border-color: #2e7d32;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #2e7d32, #43a047);
+            color: white;
+            flex: 1;
+        }
+        .btn-secondary {
+            background: #eceff1;
+            color: #37474f;
+        }
+        .btn-export {
+            background: #f9a825;
+            color: #333;
+        }
+        .status {
+            text-align: center;
+            margin: 16px 0;
+            font-weight: 600;
+            min-height: 24px;
+        }
+        .success-box {
+            background: #e8f5e9;
+            border: 2px solid #81c784;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            display: none;
+        }
+        .success-box.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 12px;
+        }
+        .count-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            font-weight: 700;
+            color: #0d47a1;
+            margin-bottom: 16px;
+        }
+        .table-wrapper {
+            max-height: 360px;
+            overflow: auto;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 9px 7px;
+            text-align: left;
+        }
+        th {
+            background: #1b5e20;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) { background: #f9fbe7; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <img src="LOGO PK ASIA.jpg" alt="Logo" class="logo" onerror="this.style.display='none'">
+            <h1>PHÒNG KHÁM ĐA KHOA ASIA PHÚ MỸ</h1>
+            <p>Khảo sát mức độ hài lòng của bệnh nhân</p>
+        </div>
+
+        <!-- FORM KHẢO SÁT -->
+        <div class="card" id="surveyForm">
+            <div class="card-title">📋 Phiếu khảo sát sự hài lòng</div>
+
+            <!-- Câu 1 -->
+            <div class="question">
+                <div class="question-text">1. Thái độ của nhân viên lễ tân / hướng dẫn?</div>
+                <div class="stars" data-name="thaiDoLeTan">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+            <!-- Câu 2 -->
+            <div class="question">
+                <div class="question-text">2. Thời gian chờ khám bệnh?</div>
+                <div class="stars" data-name="thoiGianCho">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+            <!-- Câu 3 -->
+            <div class="question">
+                <div class="question-text">3. Thái độ & chuyên môn của bác sĩ?</div>
+                <div class="stars" data-name="bacSi">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+            <!-- Câu 4 -->
+            <div class="question">
+                <div class="question-text">4. Cơ sở vật chất & vệ sinh phòng khám?</div>
+                <div class="stars" data-name="coSoVatChat">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+            <!-- Câu 5 -->
+            <div class="question">
+                <div class="question-text">5. Mức độ hài lòng tổng thể khi đến khám?</div>
+                <div class="stars" data-name="tongThe">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+            <!-- Câu 6 -->
+            <div class="question">
+                <div class="question-text">6. Bạn có giới thiệu phòng khám cho người thân không?</div>
+                <div class="rating" id="gioiThieu">
+                    <button type="button" class="rating-btn" data-value="Có">👍</button>
+                    <button type="button" class="rating-btn" data-value="Không">👎</button>
+                </div>
+            </div>
+
+            <!-- Góp ý -->
+            <div class="question">
+                <div class="question-text">7. Ý kiến đóng góp thêm (nếu có):</div>
+                <textarea id="gopY" placeholder="Viết ý kiến của bạn tại đây..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-submit" onclick="submitSurvey()">Gửi đánh giá</button>
+                <button class="btn-secondary" onclick="resetForm()">Làm lại</button>
+            </div>
+        </div>
+
+        <!-- THÀNH CÔNG -->
+        <div class="success-box" id="successBox">
+            <div class="success-icon">🎉</div>
+            <h2 style="color:#2e7d32; margin-bottom:8px;">Cảm ơn bạn rất nhiều!</h2>
+            <p style="color:#555; margin-bottom:20px;">Ý kiến của bạn giúp chúng tôi phục vụ tốt hơn.</p>
+            <button class="btn-submit" onclick="newSurvey()">Tiếp tục khảo sát người khác</button>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <!-- DANH SÁCH & XUẤT -->
+        <div class="card">
+            <div class="card-title">📊 Kết quả khảo sát đã lưu</div>
+            <div class="count-box" id="countBox">Tổng số phiếu: 0</div>
+            <div class="btn-group" style="margin-bottom:14px;">
+                <button class="btn-export" onclick="exportExcel()">📥 Xuất Excel</button>
+                <button class="btn-secondary" onclick="clearAll()">Xóa tất cả</button>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Thời gian</th>
+                            <th>Lễ tân</th>
+                            <th>Chờ khám</th>
+                            <th>Bác sĩ</th>
+                            <th>CSV C</th>
+                            <th>Tổng thể</th>
+                            <th>Giới thiệu</th>
+                            <th>Góp ý</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lưu rating hiện tại
+        const ratings = {
+            thaiDoLeTan: 0,
+            thoiGianCho: 0,
+            bacSi: 0,
+            coSoVatChat: 0,
+            tongThe: 0,
+            gioiThieu: ""
+        };
+
+        // Xử lý sao
+        document.querySelectorAll('.stars').forEach(group => {
+            const name = group.dataset.name;
+            group.querySelectorAll('.star').forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.dataset.value);
+                    ratings[name] = value;
+                    group.querySelectorAll('.star').forEach(s => {
+                        s.classList.toggle('active', parseInt(s.dataset.value) <= value);
+                    });
+                });
+            });
+        });
+
+        // Xử lý Có/Không
+        document.querySelectorAll('#gioiThieu .rating-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#gioiThieu .rating-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                ratings.gioiThieu = btn.dataset.value;
+            });
+        });
+
+        function submitSurvey() {
+            // Kiểm tra đã chọn đủ chưa
+            if (!ratings.thaiDoLeTan || !ratings.thoiGianCho || !ratings.bacSi || 
+                !ratings.coSoVatChat || !ratings.tongThe || !ratings.gioiThieu) {
+                showStatus("Vui lòng đánh giá đầy đủ tất cả các câu hỏi!", true);
+                return;
+            }
+
+            const record = {
+                id: Date.now(),
+                thoiGian: new Date().toLocaleString("vi-VN"),
+                thaiDoLeTan: ratings.thaiDoLeTan,
+                thoiGianCho: ratings.thoiGianCho,
+                bacSi: ratings.bacSi,
+                coSoVatChat: ratings.coSoVatChat,
+                tongThe: ratings.tongThe,
+                gioiThieu: ratings.gioiThieu,
+                gopY: document.getElementById("gopY").value.trim()
+            };
+
+            let list = JSON.parse(localStorage.getItem("survey_list") || "[]");
+            list.unshift(record);
+            localStorage.setItem("survey_list", JSON.stringify(list));
+
+            // Hiện cảm ơn
+            document.getElementById("surveyForm").classList.add("hidden");
+            document.getElementById("successBox").classList.add("show");
+            showStatus("");
+            loadTable();
+        }
+
+        function newSurvey() {
+            resetForm();
+            document.getElementById("successBox").classList.remove("show");
+            document.getElementById("surveyForm").classList.remove("hidden");
+        }
+
+        function resetForm() {
+            // Reset stars
+            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById("gopY").value = "";
+            Object.keys(ratings).forEach(k => ratings[k] = k === "gioiThieu" ? "" : 0);
+            showStatus("");
+        }
+
+        function loadTable() {
+            const list = JSON.parse(localStorage.getItem("survey_list") || "[]");
+            const tbody = document.getElementById("dataBody");
+            document.getElementById("countBox").textContent = `Tổng số phiếu: ${list.length}`;
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#999;padding:16px;">Chưa có dữ liệu</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = list.map((item, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${item.thoiGian}</td>
+                    <td>${"★".repeat(item.thaiDoLeTan)}</td>
+                    <td>${"★".repeat(item.thoiGianCho)}</td>
+                    <td>${"★".repeat(item.bacSi)}</td>
+                    <td>${"★".repeat(item.coSoVatChat)}</td>
+                    <td>${"★".repeat(item.tongThe)}</td>
+                    <td>${item.gioiThieu}</td>
+                    <td>${item.gopY || ""}</td>
+                </tr>
+            `).join("");
+        }
+
+        function exportExcel() {
+            const list = JSON.parse(localStorage.getItem("survey_list") || "[]");
+            if (list.length === 0) {
+                showStatus("Chưa có dữ liệu để xuất", true);
+                return;
+            }
+
+            let csv = "STT,Thời gian,Thái độ lễ tân,Thời gian chờ,Bác sĩ,Cơ sở vật chất,Tổng thể,Giới thiệu,Góp ý\n";
+            list.forEach((item, i) => {
+                csv += `${i+1},"${item.thoiGian}",${item.thaiDoLeTan},${item.thoiGianCho},${item.bacSi},${item.coSoVatChat},${item.tongThe},"${item.gioiThieu}","${item.gopY || ""}"\n`;
+            });
+
+            const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Khao_sat_hai_long_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            showStatus("✅ Đã xuất Excel thành công!");
+        }
+
+        function clearAll() {
+            if (!confirm("Bạn có chắc muốn xóa toàn bộ kết quả khảo sát?")) return;
+            localStorage.removeItem("survey_list");
+            loadTable();
+            showStatus("Đã xóa tất cả dữ liệu");
+        }
+
+        function showStatus(msg, isError = false) {
+            const el = document.getElementById("status");
+            el.textContent = msg;
+            el.style.color = isError ? "#c62828" : "#2e7d32";
+        }
+
+        // Load khi mở trang
+        window.onload = loadTable;
+    </script>
+</body>
+</html>
